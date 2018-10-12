@@ -1,5 +1,8 @@
 package io.ytcode.pathfinding.astar;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static io.ytcode.pathfinding.astar.Cost.COST_DIAGONAL;
 import static io.ytcode.pathfinding.astar.Cost.COST_ORTHOGONAL;
 import static io.ytcode.pathfinding.astar.Cost.hCost;
@@ -13,6 +16,7 @@ import static io.ytcode.pathfinding.astar.Node.setG;
 
 /** http://homepages.abdn.ac.uk/f.guerin/pages/teaching/CS1013/practicals/aStarTutorial.htm */
 public class AStar {
+  private static final Logger logger = LoggerFactory.getLogger(AStar.class);
 
   private final Nodes nodes;
 
@@ -48,7 +52,7 @@ public class AStar {
 
       while (true) {
         long n = nodes.close();
-        if (n == 0) { // TODO
+        if (n == 0) {
           return;
         }
 
@@ -62,7 +66,6 @@ public class AStar {
 
         int pg = getG(n);
 
-        // open方法会重复利用这个node，所以下面不能再有node调用
         open(x, y - 1, pg + COST_ORTHOGONAL, DIRECTION_UP, ex, ey, map);
         open(x, y + 1, pg + COST_ORTHOGONAL, DIRECTION_DOWN, ex, ey, map);
         open(x + 1, y, pg + COST_ORTHOGONAL, DIRECTION_LEFT, ex, ey, map);
@@ -72,7 +75,10 @@ public class AStar {
         open(x - 1, y - 1, pg + COST_DIAGONAL, DIRECTION_RIGHT_UP, ex, ey, map);
         open(x - 1, y + 1, pg + COST_DIAGONAL, DIRECTION_RIGHT_DOWN, ex, ey, map);
       }
-    } finally { // TODO exception?
+    } catch (Exception e) {
+      logger.error("AStar.search: from {}-{} to {}-{}", sx, sy, ex, ey, e);
+      path.clear();
+    } finally {
       clear();
       assert isCLean(map);
     }
@@ -110,69 +116,60 @@ public class AStar {
 
   private void fillPath(int x, int y, Path path, int sx, int sy, Grid map) {
     path.add(x, y);
-
     int pd = map.nodeParentDirection(x, y);
-    int px, py;
 
     while (true) {
       switch (pd) {
         case DIRECTION_UP:
-          px = x;
-          py = y + 1;
+          y++;
           break;
 
         case DIRECTION_DOWN:
-          px = x;
-          py = y - 1;
+          y--;
           break;
 
         case DIRECTION_LEFT:
-          px = x - 1;
-          py = y;
+          x--;
           break;
 
         case DIRECTION_RIGHT:
-          px = x + 1;
-          py = y;
+          x++;
           break;
 
         case DIRECTION_LEFT_UP:
-          px = x - 1;
-          py = y + 1;
+          x--;
+          y++;
           break;
 
         case DIRECTION_LEFT_DOWN:
-          px = x - 1;
-          py = y - 1;
+          x--;
+          y--;
           break;
 
         case DIRECTION_RIGHT_UP:
-          px = x + 1;
-          py = y + 1;
+          x++;
+          y++;
           break;
 
         case DIRECTION_RIGHT_DOWN:
-          px = x + 1;
-          py = y - 1;
+          x++;
+          y--;
           break;
 
         default:
           throw new RuntimeException("illegal direction: " + pd);
       }
 
-      if (px == sx && py == sy) {
-        path.add(px, py);
+      if (x == sx && y == sy) {
+        path.add(x, y);
         return;
       }
 
-      int ppd = map.nodeParentDirection(px, py);
+      int ppd = map.nodeParentDirection(x, y);
       if (ppd != pd) {
-        path.add(px, py);
+        path.add(x, y);
         pd = ppd;
       }
-
-      x = px;
-      y = py;
     }
   }
 

@@ -6,20 +6,16 @@ import static io.ytcode.pathfinding.astar.Grid.MAX_OPEN_NODE_SIZE;
 import static io.ytcode.pathfinding.astar.Node.getF;
 import static io.ytcode.pathfinding.astar.Node.getX;
 import static io.ytcode.pathfinding.astar.Node.getY;
-import static io.ytcode.pathfinding.astar.Node.setF;
-import static io.ytcode.pathfinding.astar.Node.setG;
-import static io.ytcode.pathfinding.astar.Node.setX;
-import static io.ytcode.pathfinding.astar.Node.setY;
-
+import static io.ytcode.pathfinding.astar.Node.toNode;
 
 class Nodes {
   Grid map;
-//  private Node[] nodes;
+  //  private Node[] nodes;
   private long[] nodes;
   private int size;
 
   Nodes() {
-//    this.nodes = new Node[16];
+    //    this.nodes = new Node[16];
     this.nodes = new long[16];
   }
 
@@ -39,13 +35,13 @@ class Nodes {
 
   long close() {
     if (size == 0) {
-      return -1;
+      return 0; // f一定不为0，所以node肯定不为0
     }
     long r = nodes[0];
     size--;
     if (size > 0) {
       long n = nodes[size];
-//      nodes[size] = r;
+      //      nodes[size] = r;
       siftDown(0, n);
     }
     map.nodeInfoClosed(getX(r), getY(r));
@@ -58,7 +54,7 @@ class Nodes {
   }
 
   void openNodeParentChanged(long n, int idx, int pd) {
-//    assert nodes[idx] == n;
+    //    assert nodes[idx] == n;
     siftUp(idx, n);
     map.nodeParentDirectionUpdate(getX(n), getY(n), pd);
   }
@@ -114,21 +110,23 @@ class Nodes {
   }
 
   private long node(int x, int y, int g, int h, int pd) {
-//    long node = nodes[size];
-//    if (node == null) {
-//      node = new Node();
-//    }
+    //    long node = nodes[size];
+    //    if (node == null) {
+    //      node = new Node();
+    //    }
 
-//    node.x = x;
-//    node.y = y;
-//
-//    node.g = g;
-//    node.f = g + h;
+    //    node.x = x;
+    //    node.y = y;
+    //
+    //    node.g = g;
+    //    node.f = g + h;
 
-    long node = setX(0, x);
-    node = setY(node, y);
-    node = setG(node, g);
-    node = setF(node, g + h);
+    long node = toNode(x, y, g, g + h);
+
+    //    long node = setX(0, x);
+    //    node = setY(node, y);
+    //    node = setG(node, g);
+    //    node = setF(node, g + h);
 
     map.nodeParentDirectionUpdate(x, y, pd);
     return node;

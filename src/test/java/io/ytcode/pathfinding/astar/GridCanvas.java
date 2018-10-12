@@ -3,7 +3,7 @@ package io.ytcode.pathfinding.astar;
 import javax.swing.*;
 import java.awt.*;
 
-public abstract class Sketchpad extends JFrame {
+public abstract class GridCanvas extends JFrame {
 
   private static final int width = 1800; // 90
   private static final int height = 1000; // 50
@@ -17,7 +17,7 @@ public abstract class Sketchpad extends JFrame {
   static final int gridWidth = width / gridSize;
   static final int gridHeight = height / gridSize;
 
-  Sketchpad(String name) {
+  GridCanvas(String name) {
     super(name);
     setSize(width, height);
     setVisible(true);
@@ -60,7 +60,6 @@ public abstract class Sketchpad extends JFrame {
     g.setColor(c);
     g.fillRect(x, y, gridSize, gridSize);
   }
-
 
   protected void drawLine(Graphics g, int x1, int y1, int x2, int y2, Color c) {
     x1 *= gridSize;

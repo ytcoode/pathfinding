@@ -2,11 +2,11 @@ package io.ytcode.pathfinding.astar;
 
 public class Point {
 
-  static int X(long p) {
+  public static int getX(long p) {
     return (int) (p >>> 32);
   }
 
-  public static int Y(long p) {
+  public static int getY(long p) {
     return (int) p;
   }
 

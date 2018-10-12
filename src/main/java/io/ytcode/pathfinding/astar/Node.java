@@ -1,6 +1,5 @@
 package io.ytcode.pathfinding.astar;
 
-
 import static io.ytcode.pathfinding.astar.Utils.mask;
 
 class Node {
@@ -27,6 +26,13 @@ class Node {
   private static final int X_SHIFT = Y_BITS + G_BITS + F_BITS;
   private static final long X_SHIFT_MASK = (long) X_MASK << X_SHIFT;
 
+  static long toNode(int x, int y, int g, int f) {
+    if (f < 0 || f > F_MASK) { // 如果这里报错，Cost类里改成2:3? 或者保存h而不是f?
+      throw new RuntimeException("TooBigF");
+    }
+    return (long) x << X_SHIFT | (long) y << Y_SHIFT | g << G_SHIFT | f;
+  }
+
   static long setX(long l, int v) {
     assert v >= 0 && v <= X_MASK;
     return set(l, v, X_SHIFT_MASK, X_SHIFT);
@@ -45,8 +51,8 @@ class Node {
     return get(l, Y_MASK, Y_SHIFT);
   }
 
-  static long setG(long l, int v) { // TODO check
-    assert v >= 0 && v < G_MASK :"TooBigG"; // 不用真的check，因为F会check，而G一定小于F
+  static long setG(long l, int v) {
+    assert v >= 0 && v <= G_MASK;
     return set(l, v, G_SHIFT_MASK, G_SHIFT);
   }
 
@@ -55,8 +61,8 @@ class Node {
   }
 
   static long setF(long l, int v) {
-    if (v < 0 || v >= F_MASK) { // 把=除去吧，因为close node时返回-1表示没有open节点了
-      throw new RuntimeException("TooBigF"); // 如果这里报错，Cost类里改成2:3? 或者保存h而不是f?
+    if (v < 0 || v > F_MASK) { // 如果这里报错，Cost类里改成2:3? 或者保存h而不是f?
+      throw new RuntimeException("TooBigF");
     }
     return set(l, v, F_SHIFT_MASK, F_SHIFT);
   }

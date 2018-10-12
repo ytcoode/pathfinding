@@ -7,7 +7,6 @@ public class Grid {
 
   private static final int NODE_INFO_BITS = 12;
   private static final int NODE_INFO_MASK = mask(NODE_INFO_BITS);
-  private static final int NODE_INFO_MASK_COMPLEMENT = ~NODE_INFO_MASK;
   private static final int NODE_INFO_NULL = 0;
   private static final int NODE_INFO_CLOSED = NODE_INFO_MASK;
 
@@ -16,8 +15,6 @@ public class Grid {
   private static final int NODE_PARENT_DIRECTION_SHIFT = NODE_INFO_BITS;
   private static final int NODE_PARENT_DIRECTION_SHIFT_MASK =
       NODE_PARENT_DIRECTION_MASK << NODE_PARENT_DIRECTION_SHIFT;
-  private static final int NODE_PARENT_DIRECTION_SHIFT_MASK_COMPLEMENT =
-      ~NODE_PARENT_DIRECTION_SHIFT_MASK;
 
   private static final int WALKABLE_BITS = 1;
   private static final int WALKABLE_MASK = mask(WALKABLE_BITS);
@@ -61,7 +58,7 @@ public class Grid {
 
   void nodeInfoOpenNodeIdx(int x, int y, int idx) {
     assert idx >= 0 && idx < MAX_OPEN_NODE_SIZE;
-    grid[x][y] = (short) (grid[x][y] & NODE_INFO_MASK_COMPLEMENT | (idx + 1));
+    grid[x][y] = (short) (grid[x][y] & ~NODE_INFO_MASK | (idx + 1));
   }
 
   static boolean isNullNode(int info) {
@@ -81,8 +78,7 @@ public class Grid {
     assert d >= 0 && d <= NODE_PARENT_DIRECTION_MASK;
     grid[x][y] =
         (short)
-            (grid[x][y] & NODE_PARENT_DIRECTION_SHIFT_MASK_COMPLEMENT
-                | (d << NODE_PARENT_DIRECTION_SHIFT));
+            (grid[x][y] & ~NODE_PARENT_DIRECTION_SHIFT_MASK | (d << NODE_PARENT_DIRECTION_SHIFT));
   }
 
   int nodeParentDirection(int x, int y) {
@@ -92,7 +88,7 @@ public class Grid {
   void clear() {
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < height; j++) {
-        grid[i][j] &= NODE_INFO_MASK_COMPLEMENT;
+        grid[i][j] &= ~NODE_INFO_MASK;
       }
     }
   }
