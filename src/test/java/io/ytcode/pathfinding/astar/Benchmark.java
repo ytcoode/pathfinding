@@ -6,7 +6,7 @@ public class Benchmark {
 
   public static void main(String[] args) {
     AStar aStar = new AStar();
-    for (int i = 1; i <= 10; i++) {
+    for (int i = 1; i <= 5; i++) {
       Grid map = new Grid(i * 100, i * 100);
       benchmark(aStar, map);
     }

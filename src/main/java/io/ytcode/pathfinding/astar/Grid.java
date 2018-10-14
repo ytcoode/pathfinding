@@ -5,22 +5,21 @@ import static io.ytcode.pathfinding.astar.Utils.mask;
 
 public class Grid {
 
-  private static final int NODE_INFO_BITS = 12;
-  private static final int NODE_INFO_MASK = mask(NODE_INFO_BITS);
-  private static final int NODE_INFO_NULL = 0;
-  private static final int NODE_INFO_CLOSED = NODE_INFO_MASK;
+  private static final int NODE_BITS = 12;
+  private static final int NODE_MASK = mask(NODE_BITS);
+  private static final int NODE_NULL = 0;
+  private static final int NODE_CLOSED = NODE_MASK;
 
   private static final int NODE_PARENT_DIRECTION_BITS = 3; // 8方向
   private static final int NODE_PARENT_DIRECTION_MASK = mask(NODE_PARENT_DIRECTION_BITS);
-  private static final int NODE_PARENT_DIRECTION_SHIFT = NODE_INFO_BITS;
+  private static final int NODE_PARENT_DIRECTION_SHIFT = NODE_BITS;
   private static final int NODE_PARENT_DIRECTION_SHIFT_MASK =
       NODE_PARENT_DIRECTION_MASK << NODE_PARENT_DIRECTION_SHIFT;
 
   private static final int WALKABLE_BITS = 1;
   private static final int WALKABLE_MASK = mask(WALKABLE_BITS);
-  private static final int WALKABLE_SHIFT = NODE_INFO_BITS + NODE_PARENT_DIRECTION_BITS;
+  private static final int WALKABLE_SHIFT = NODE_PARENT_DIRECTION_SHIFT + NODE_PARENT_DIRECTION_BITS;
   private static final int WALKABLE_SHIFT_MASK = WALKABLE_MASK << WALKABLE_SHIFT;
-  private static final int WALKABLE_SHIFT_MASK_COMPLEMENT = ~WALKABLE_SHIFT_MASK;
 
   // const
   static final int DIRECTION_UP = 0;
@@ -32,46 +31,49 @@ public class Grid {
   static final int DIRECTION_RIGHT_UP = 6;
   static final int DIRECTION_RIGHT_DOWN = 7;
 
-  static final int MAX_OPEN_NODE_SIZE = NODE_INFO_MASK - 1; // 全0全1都被用了
+  static final int MAX_OPEN_NODE_SIZE = NODE_MASK - 1; // 全0全1都被用了
 
   // data
   private final short[][] grid;
-
   private final int width;
   private final int height;
 
   public Grid(int width, int height) {
-    check(width > 0 && width <= Node.X_MASK);
-    check(height > 0 && height <= Node.Y_MASK);
+    check(width > 0 && width <= Node.X_MASK + 1);
+    check(height > 0 && height <= Node.Y_MASK + 1);
     this.grid = new short[width][height];
     this.width = width;
     this.height = height;
   }
 
-  int nodeInfo(int x, int y) {
-    return grid[x][y] & NODE_INFO_MASK;
+  int info(int x, int y) {
+    return grid[x][y] & (WALKABLE_SHIFT_MASK | NODE_MASK);
   }
 
-  void nodeInfoClosed(int x, int y) {
-    grid[x][y] |= NODE_INFO_CLOSED;
-  }
-
-  void nodeInfoOpenNodeIdx(int x, int y, int idx) {
-    assert idx >= 0 && idx < MAX_OPEN_NODE_SIZE;
-    grid[x][y] = (short) (grid[x][y] & ~NODE_INFO_MASK | (idx + 1));
+  static boolean isUnwalkable(int info) {
+    return (info & WALKABLE_SHIFT_MASK) != 0;
   }
 
   static boolean isNullNode(int info) {
-    return info == NODE_INFO_NULL;
+    return info == NODE_NULL;
   }
 
   static boolean isClosedNode(int info) {
-    return info == NODE_INFO_CLOSED;
+    return info == NODE_CLOSED;
   }
 
   static int openNodeIdx(int info) {
     assert info > 0 && info <= MAX_OPEN_NODE_SIZE;
     return info - 1;
+  }
+
+  void nodeClosed(int x, int y) {
+    grid[x][y] |= NODE_CLOSED;
+  }
+
+  void openNodeIdxUpdate(int x, int y, int idx) {
+    assert idx >= 0 && idx < MAX_OPEN_NODE_SIZE;
+    grid[x][y] = (short) (grid[x][y] & ~NODE_MASK | (idx + 1));
   }
 
   void nodeParentDirectionUpdate(int x, int y, int d) {
@@ -88,7 +90,7 @@ public class Grid {
   void clear() {
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < height; j++) {
-        grid[i][j] &= ~NODE_INFO_MASK;
+        grid[i][j] &= WALKABLE_SHIFT_MASK;
       }
     }
   }
@@ -96,7 +98,7 @@ public class Grid {
   boolean isClean() {
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < height; j++) {
-        if (nodeInfo(i, j) != 0) {
+        if ((grid[i][j] & (NODE_PARENT_DIRECTION_SHIFT_MASK | NODE_MASK)) != 0) {
           return false;
         }
       }
@@ -106,7 +108,7 @@ public class Grid {
 
   public void setWalkable(int x, int y, boolean flag) {
     if (flag) {
-      grid[x][y] &= WALKABLE_SHIFT_MASK_COMPLEMENT;
+      grid[x][y] &= ~WALKABLE_SHIFT_MASK;
     } else {
       grid[x][y] |= WALKABLE_SHIFT_MASK;
     }

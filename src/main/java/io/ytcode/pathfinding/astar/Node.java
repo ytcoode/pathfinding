@@ -8,74 +8,45 @@ class Node {
 
   private static final int F_BITS = 16;
   private static final int F_MASK = mask(F_BITS);
-  private static final int F_SHIFT = 0;
-  private static final long F_SHIFT_MASK = (long) F_MASK << F_SHIFT;
 
   private static final int G_BITS = 16;
   private static final int G_MASK = mask(G_BITS);
   private static final int G_SHIFT = F_BITS;
-  private static final long G_SHIFT_MASK = (long) G_MASK << G_SHIFT;
+
+  private static final long G_F_MASK_COMPLEMENT = ~((long) G_MASK << G_SHIFT | F_MASK);
 
   private static final int Y_BITS = 16;
   static final int Y_MASK = mask(Y_BITS);
-  private static final int Y_SHIFT = G_BITS + F_BITS;
-  private static final long Y_SHIFT_MASK = (long) Y_MASK << Y_SHIFT;
+  private static final int Y_SHIFT = G_SHIFT + G_BITS;
 
   private static final int X_BITS = 16;
   static final int X_MASK = mask(X_BITS);
-  private static final int X_SHIFT = Y_BITS + G_BITS + F_BITS;
-  private static final long X_SHIFT_MASK = (long) X_MASK << X_SHIFT;
+  private static final int X_SHIFT = Y_SHIFT + Y_BITS;
 
   static long toNode(int x, int y, int g, int f) {
-    if (f < 0 || f > F_MASK) { // 如果这里报错，Cost类里改成2:3? 或者保存h而不是f?
-      throw new RuntimeException("TooBigF");
+    if (f < 0) { // 如果这里报错，Cost类里改成2:3? 或者保存h而不是f?
+      throw new TooLongPathException("TooBigF");
     }
-    return (long) x << X_SHIFT | (long) y << Y_SHIFT | g << G_SHIFT | f;
-  }
-
-  static long setX(long l, int v) {
-    assert v >= 0 && v <= X_MASK;
-    return set(l, v, X_SHIFT_MASK, X_SHIFT);
+    return (long) x << X_SHIFT | (long) y << Y_SHIFT | (long) g << G_SHIFT | f;
   }
 
   static int getX(long l) {
-    return get(l, X_MASK, X_SHIFT);
-  }
-
-  static long setY(long l, int v) {
-    assert v >= 0 && v <= Y_MASK;
-    return set(l, v, Y_SHIFT_MASK, Y_SHIFT);
+    return (int) (l >>> X_SHIFT);
   }
 
   static int getY(long l) {
-    return get(l, Y_MASK, Y_SHIFT);
-  }
-
-  static long setG(long l, int v) {
-    assert v >= 0 && v <= G_MASK;
-    return set(l, v, G_SHIFT_MASK, G_SHIFT);
+    return (int) (l >>> Y_SHIFT & Y_MASK);
   }
 
   static int getG(long l) {
-    return get(l, G_MASK, G_SHIFT);
-  }
-
-  static long setF(long l, int v) {
-    if (v < 0 || v > F_MASK) { // 如果这里报错，Cost类里改成2:3? 或者保存h而不是f?
-      throw new RuntimeException("TooBigF");
-    }
-    return set(l, v, F_SHIFT_MASK, F_SHIFT);
+    return (int) (l >> G_SHIFT & G_MASK);
   }
 
   static int getF(long l) {
-    return get(l, F_MASK, F_SHIFT);
+    return (int) (l & F_MASK);
   }
 
-  private static long set(long l, int v, long shiftMask, int shift) {
-    return l & ~shiftMask | ((long) v << shift);
-  }
-
-  private static int get(long l, int mask, int shift) {
-    return (int) (l >>> shift & mask);
+  static long setGF(long l, int g, int f) { // f一定比原f值更小，g一定小于等于f，所以两个值都>0
+    return l & G_F_MASK_COMPLEMENT | ((long) g << G_SHIFT) | f;
   }
 }

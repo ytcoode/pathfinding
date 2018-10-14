@@ -32,25 +32,25 @@ for (int i = 0; i < path.size(); i++) {
 CPU: Intel(R) Core(TM) i7-7600U CPU @ 2.80GHz
 
 ```
-From 0-0 to 99-99 -> 49900 ops/sec
-From 0-0 to 99-99 -> 70922 ops/sec
-From 0-0 to 99-99 -> 70922 ops/sec
+From 0-0 to 99-99 -> 48567 ops/sec
+From 0-0 to 99-99 -> 77580 ops/sec
+From 0-0 to 99-99 -> 77459 ops/sec
 
-From 0-0 to 199-199 -> 27632 ops/sec
-From 0-0 to 199-199 -> 27571 ops/sec
-From 0-0 to 199-199 -> 27315 ops/sec
+From 0-0 to 199-199 -> 31486 ops/sec
+From 0-0 to 199-199 -> 32321 ops/sec
+From 0-0 to 199-199 -> 32041 ops/sec
 
-From 0-0 to 299-299 -> 16589 ops/sec
-From 0-0 to 299-299 -> 16488 ops/sec
-From 0-0 to 299-299 -> 16364 ops/sec
+From 0-0 to 299-299 -> 18440 ops/sec
+From 0-0 to 299-299 -> 18409 ops/sec
+From 0-0 to 299-299 -> 18245 ops/sec
 
-From 0-0 to 399-399 -> 11303 ops/sec
-From 0-0 to 399-399 -> 11216 ops/sec
-From 0-0 to 399-399 -> 11207 ops/sec
+From 0-0 to 399-399 -> 12355 ops/sec
+From 0-0 to 399-399 -> 12355 ops/sec
+From 0-0 to 399-399 -> 12424 ops/sec
 
-From 0-0 to 499-499 -> 8501 ops/sec
-From 0-0 to 499-499 -> 8480 ops/sec
-From 0-0 to 499-499 -> 8433 ops/sec
+From 0-0 to 499-499 -> 9447 ops/sec
+From 0-0 to 499-499 -> 9317 ops/sec
+From 0-0 to 499-499 -> 9360 ops/sec
 ```
 
 ## Screenshots

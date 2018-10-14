@@ -21,7 +21,7 @@ class Nodes {
 
   void open(int x, int y, int g, int h, int pd) {
     if (size >= MAX_OPEN_NODE_SIZE) {
-      throw new RuntimeException("TooManyOpenNodes! max: " + MAX_OPEN_NODE_SIZE);
+      throw new TooLongPathException("TooManyOpenNodes! max: " + MAX_OPEN_NODE_SIZE);
     }
 
     if (size >= nodes.length) {
@@ -44,7 +44,7 @@ class Nodes {
       //      nodes[size] = r;
       siftDown(0, n);
     }
-    map.nodeInfoClosed(getX(r), getY(r));
+    map.nodeClosed(getX(r), getY(r));
     return r;
   }
 
@@ -106,7 +106,7 @@ class Nodes {
 
   private void setNode(int i, long n) {
     nodes[i] = n;
-    map.nodeInfoOpenNodeIdx(getX(n), getY(n), i);
+    map.openNodeIdxUpdate(getX(n), getY(n), i);
   }
 
   private long node(int x, int y, int g, int h, int pd) {
