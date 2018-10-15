@@ -64,5 +64,5 @@ From 0-0 to 499-499 -> 11867 ops/sec
 
 [maven-shield]: https://img.shields.io/maven-central/v/io.ytcode/pathfinding.png
 [maven-link]: https://search.maven.org/search?q=io.ytcode.pathfinding
-[javadoc-shield]: http://www.javadoc.io/badge/io.ytcode/pathfinding.svg
-[javadoc-link]: http://www.javadoc.io/doc/io.ytcode/pathfinding
+[javadoc-shield]: https://www.javadoc.io/badge/io.ytcode/pathfinding.svg
+[javadoc-link]: https://www.javadoc.io/doc/io.ytcode/pathfinding
