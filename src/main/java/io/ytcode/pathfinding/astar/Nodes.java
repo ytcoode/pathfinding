@@ -69,10 +69,12 @@ class Nodes {
     return size == 0;
   }
 
+  private static final int HEAP_SHIFT = 2;
+
   private void siftUp(int i, long n) {
     int nf = getF(n);
     while (i > 0) {
-      int pi = (i - 1) >>> 1;
+      int pi = (i - 1) >>> HEAP_SHIFT;
       long p = nodes[pi];
       if (nf >= getF(p)) {
         break;
@@ -85,16 +87,34 @@ class Nodes {
 
   private void siftDown(int i, long n) {
     int nf = getF(n);
-    int half = size >>> 1;
-
-    while (i < half) {
-      int ci = (i << 1) + 1;
+    while (i < size) {
+      // 找children中最小的
+      int ci = (i << HEAP_SHIFT) + 1;
+      if (ci >= size) {
+        break;
+      }
       long c = nodes[ci];
 
-      int right = ci + 1;
-      if (right < size && getF(nodes[right]) < getF(c)) {
-        c = nodes[ci = right];
+      int cj = ci + 1;
+      if (cj < size) {
+        if (getF(nodes[cj]) < getF(c)) {
+          c = nodes[ci = cj];
+        }
+
+        if (++cj < size) {
+          if (getF(nodes[cj]) < getF(c)) {
+            c = nodes[ci = cj];
+          }
+
+          if (++cj < size) {
+            if (getF(nodes[cj]) < getF(c)) {
+              c = nodes[ci = cj];
+            }
+          }
+        }
       }
+
+      // 和最小的child比较
       if (nf <= getF(c)) {
         break;
       }

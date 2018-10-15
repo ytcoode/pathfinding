@@ -2,6 +2,9 @@
 
 ___A fast, GC-free Java implementation of A* (A Star) algorithm.___
 
+[![Maven Release][maven-shield]][maven-link]
+[![Javadocs][javadoc-shield]][javadoc-link]
+
 ## Usage
 
 ```java
@@ -32,27 +35,34 @@ for (int i = 0; i < path.size(); i++) {
 CPU: Intel(R) Core(TM) i7-7600U CPU @ 2.80GHz
 
 ```
-From 0-0 to 99-99 -> 48567 ops/sec
-From 0-0 to 99-99 -> 77580 ops/sec
-From 0-0 to 99-99 -> 77459 ops/sec
+From 0-0 to 99-99 -> 56180 ops/sec
+From 0-0 to 99-99 -> 87566 ops/sec
+From 0-0 to 99-99 -> 87489 ops/sec
 
-From 0-0 to 199-199 -> 31486 ops/sec
-From 0-0 to 199-199 -> 32321 ops/sec
-From 0-0 to 199-199 -> 32041 ops/sec
+From 0-0 to 199-199 -> 36271 ops/sec
+From 0-0 to 199-199 -> 36510 ops/sec
+From 0-0 to 199-199 -> 36430 ops/sec
 
-From 0-0 to 299-299 -> 18440 ops/sec
-From 0-0 to 299-299 -> 18409 ops/sec
-From 0-0 to 299-299 -> 18245 ops/sec
+From 0-0 to 299-299 -> 23392 ops/sec
+From 0-0 to 299-299 -> 23310 ops/sec
+From 0-0 to 299-299 -> 23095 ops/sec
 
-From 0-0 to 399-399 -> 12355 ops/sec
-From 0-0 to 399-399 -> 12355 ops/sec
-From 0-0 to 399-399 -> 12424 ops/sec
+From 0-0 to 399-399 -> 16121 ops/sec
+From 0-0 to 399-399 -> 16088 ops/sec
+From 0-0 to 399-399 -> 16059 ops/sec
 
-From 0-0 to 499-499 -> 9447 ops/sec
-From 0-0 to 499-499 -> 9317 ops/sec
-From 0-0 to 499-499 -> 9360 ops/sec
+From 0-0 to 499-499 -> 12045 ops/sec
+From 0-0 to 499-499 -> 12011 ops/sec
+From 0-0 to 499-499 -> 11867 ops/sec
 ```
 
 ## Screenshots
 
 ![Image of AStar](images/astar.png)
+
+<!-- references -->
+
+[maven-shield]: https://img.shields.io/maven-central/v/io.ytcode/pathfinding.png
+[maven-link]: https://search.maven.org/search?q=io.ytcode.pathfinding
+[javadoc-shield]: http://www.javadoc.io/badge/io.ytcode/pathfinding.svg
+[javadoc-link]: http://www.javadoc.io/doc/io.ytcode/pathfinding
