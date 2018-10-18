@@ -13,6 +13,19 @@ public class Path {
     this.ps = new long[8];
   }
 
+  void add(int x, int y) { // 从后向前加
+    long p = toPoint(x, y);
+    if (size >= ps.length) {
+      grow(size + 1);
+    }
+    ps[size] = p;
+    size++;
+  }
+
+  void remove() {
+    size--;
+  }
+
   public long get(int i) {
     assert i >= 0 && i < size;
     return ps[size - 1 - i];
@@ -22,16 +35,7 @@ public class Path {
     return size;
   }
 
-  void add(int x, int y) {
-    long p = toPoint(x, y);
-    if (size >= ps.length) {
-      grow(size + 1);
-    }
-    ps[size] = p;
-    size++;
-  }
-
-  void clear() {
+  public void clear() {
     size = 0;
   }
 

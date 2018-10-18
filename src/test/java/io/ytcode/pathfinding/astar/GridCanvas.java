@@ -5,15 +5,15 @@ import java.awt.*;
 
 public abstract class GridCanvas extends JFrame {
 
-  private static final int width = 1800; // 90
-  private static final int height = 1000; // 50
+  private static final int width = 800; // 90
+  private static final int height = 800; // 50
 
-  private static final int startX = 50;
-  private static final int startY = 60;
+  private static final int startX = 60;
+  private static final int startY = 80;
   private static final int endX = startX + width;
   private static final int endY = startY + height;
 
-  private static final int gridSize = 20;
+  private static final int gridSize = 50;
   static final int gridWidth = width / gridSize;
   static final int gridHeight = height / gridSize;
 
@@ -34,8 +34,9 @@ public abstract class GridCanvas extends JFrame {
       int x = i * gridSize + startX;
       g.drawLine(x, startY, x, endY);
       if (i < gridWidth) {
-        g.drawString("" + i, x + 3, startY - 5);
-        g.drawString("" + i, x + 3, endY + 15);
+        x = x + gridSize / 2 - 7;
+        g.drawString("" + i, x, startY - 5);
+        g.drawString("" + i, x, endY + 15);
       }
     }
 
@@ -44,8 +45,9 @@ public abstract class GridCanvas extends JFrame {
       int y = i * gridSize + startY;
       g.drawLine(startX, y, endX, y);
       if (i < gridHeight) {
-        g.drawString("" + i, startX - 18, y + 15);
-        g.drawString("" + i, endX + 3, y + 15);
+        y = y + gridSize / 2 + 5;
+        g.drawString("" + i, startX - 20, y);
+        g.drawString("" + i, endX + 10, y);
       }
     }
   }

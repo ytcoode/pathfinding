@@ -60,6 +60,8 @@ From 0-0 to 499-499 -> 11867 ops/sec
 
 ![Image of AStar](images/astar.png)
 
+![Image of AStar2](images/astar2.png)
+
 <!-- references -->
 
 [maven-shield]: https://img.shields.io/maven-central/v/io.ytcode/pathfinding.png
