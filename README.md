@@ -58,27 +58,27 @@ From 0-0 to 499-499 -> 11867 ops/sec
 
 ## Screenshots
 
-smooth: false;
+smooth: false
 
 ![Image of AStar](images/astar-0-unsmooth.png)
 
-smooth: true;
+smooth: true
 
 ![Image of AStar](images/astar-0-smooth.png)
 
-smooth: false;
+smooth: false
 
 ![Image of AStar](images/astar-1-unsmooth.png)
 
-smooth: true;
+smooth: true
 
 ![Image of AStar](images/astar-1-smooth.png)
 
-smooth: false;
+smooth: false
 
 ![Image of AStar](images/astar-2-unsmooth.png)
 
-smooth: true;
+smooth: true
 
 ![Image of AStar](images/astar-2-smooth.png)
 
