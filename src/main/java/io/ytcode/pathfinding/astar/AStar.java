@@ -12,13 +12,13 @@ import static io.ytcode.pathfinding.astar.Node.getG;
 import static io.ytcode.pathfinding.astar.Node.getX;
 import static io.ytcode.pathfinding.astar.Node.getY;
 import static io.ytcode.pathfinding.astar.Node.setGF;
+import static io.ytcode.pathfinding.astar.Reachable.isReachable;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
 /** http://homepages.abdn.ac.uk/f.guerin/pages/teaching/CS1013/practicals/aStarTutorial.htm */
 public class AStar {
   private static final Logger logger = LoggerFactory.getLogger(AStar.class);
-  private static final float DELTA = 1f;
 
   private final Nodes nodes;
 
@@ -74,7 +74,7 @@ public class AStar {
         int y = getY(n);
 
         if (x == ex && y == ey) {
-          fillPath(x, y, path, sx, sy, map, smooth);
+          fillPath(ex, ey, sx, sy, path, map, smooth);
           return;
         }
 
@@ -159,78 +159,77 @@ public class AStar {
     nodes.openNodeParentChanged(n, idx, pd);
   }
 
-  private void fillPath(int x, int y, Path path, int sx, int sy, Grid map, boolean smooth) {
-    pathAdd(path, x, y, map, smooth);
-    int pd = map.nodeParentDirection(x, y);
+  private void fillPath(int ex, int ey, int sx, int sy, Path path, Grid map, boolean smooth) {
+    fillPath(ex, ey, path, map, smooth);
+    int pd = map.nodeParentDirection(ex, ey);
 
     while (true) {
       switch (pd) {
         case DIRECTION_UP:
-          y++;
+          ey++;
           break;
 
         case DIRECTION_DOWN:
-          y--;
+          ey--;
           break;
 
         case DIRECTION_LEFT:
-          x--;
+          ex--;
           break;
 
         case DIRECTION_RIGHT:
-          x++;
+          ex++;
           break;
 
         case DIRECTION_LEFT_UP:
-          x--;
-          y++;
+          ex--;
+          ey++;
           break;
 
         case DIRECTION_LEFT_DOWN:
-          x--;
-          y--;
+          ex--;
+          ey--;
           break;
 
         case DIRECTION_RIGHT_UP:
-          x++;
-          y++;
+          ex++;
+          ey++;
           break;
 
         case DIRECTION_RIGHT_DOWN:
-          x++;
-          y--;
+          ex++;
+          ey--;
           break;
 
         default:
           throw new RuntimeException("illegal direction: " + pd);
       }
 
-      if (x == sx && y == sy) {
-        pathAdd(path, x, y, map, smooth);
+      if (ex == sx && ey == sy) {
+        fillPath(ex, ey, path, map, smooth);
         return;
       }
 
-      int ppd = map.nodeParentDirection(x, y);
+      int ppd = map.nodeParentDirection(ex, ey);
       if (ppd != pd) {
-        pathAdd(path, x, y, map, smooth);
+        fillPath(ex, ey, path, map, smooth);
         pd = ppd;
       }
     }
   }
 
-  private void pathAdd(Path path, int x, int y, Grid map, boolean smooth) {
+  private void fillPath(int x, int y, Path path, Grid map, boolean smooth) {
     if (!smooth) {
       path.add(x, y);
       return;
     }
 
-    // 这个点到上一个点是直达的，所以只用看上上个点
-    while (path.size() >= 2) {
+    while (path.size() >= 2) { // 这个点到上一个点是直达的，所以只用看上上个点
       long p = path.get(1);
       int x2 = Point.getX(p);
       int y2 = Point.getY(p);
 
-      if (!canReachDirectly(x, y, x2, y2, map)) {
+      if (!isReachable(x, y, x2, y2, map)) {
         path.add(x, y);
         return;
       }
@@ -239,100 +238,6 @@ public class AStar {
     path.add(x, y);
   }
 
-  private boolean canReachDirectly(int x1, int y1, int x2, int y2, Grid map) { // 不完全准确，只是近似
-    int dx = x2 - x1;
-    int dy = y2 - y1;
-
-    // 水平直线
-    if (dy == 0) {
-      if (x2 > x1) {
-        for (int x = x1 + 1; x < x2; x++) {
-          if (!map.isWalkable(x, y1)) {
-            return false;
-          }
-        }
-      } else {
-        for (int x = x2 + 1; x < x1; x++) {
-          if (!map.isWalkable(x, y1)) {
-            return false;
-          }
-        }
-      }
-      return true;
-    }
-
-    // 竖直直线
-    if (dx == 0) {
-      if (y2 > y1) {
-        for (int y = y1 + 1; y < y2; y++) {
-          if (!map.isWalkable(x1, y)) {
-            return false;
-          }
-        }
-      } else {
-        for (int y = y2 + 1; y < y1; y++) {
-          if (!map.isWalkable(x1, y)) {
-            return false;
-          }
-        }
-      }
-    }
-
-    // 偏x轴，递增x
-    if (Math.abs(dx) > Math.abs(dy)) {
-      float deltaX = dx > 0 ? DELTA : -DELTA;
-      float deltaY = (float) dy / dx * deltaX;
-
-      float x = x1 + 0.5f + deltaX; // 从起始点的中心开始
-      float y = y1 + 0.5f + deltaY;
-
-      if (dx > 0) {
-        while (x < x2) {
-          if (!map.isWalkable((int) x, (int) y)) {
-            return false;
-          }
-          x += deltaX;
-          y += deltaY;
-        }
-      } else {
-        while (x > x2) {
-          if (!map.isWalkable((int) x, (int) y)) {
-            return false;
-          }
-          x += deltaX;
-          y += deltaY;
-        }
-      }
-
-      return true;
-    }
-
-    // 偏y轴，递增y
-    float deltaY = dy > 0 ? DELTA : -DELTA;
-    float deltaX = (float) dx / dy * deltaY;
-
-    float x = x1 + 0.5f + deltaX; // 从起始点的中心开始
-    float y = y1 + 0.5f + deltaY;
-
-    if (dy > 0) {
-      while (y < y2) {
-        if (!map.isWalkable((int) x, (int) y)) {
-          return false;
-        }
-        x += deltaX;
-        y += deltaY;
-      }
-    } else {
-      while (y > y2) {
-        if (!map.isWalkable((int) x, (int) y)) {
-          return false;
-        }
-        x += deltaX;
-        y += deltaY;
-      }
-    }
-    return true;
-  }
 
   private void clear() {
     nodes.clear();

@@ -16,6 +16,7 @@ public class Demo {
 
     // Search
     Path path = aStar.search(0, 0, grid.getWidth() - 1, grid.getHeight() - 1, grid);
+    //    Path path = aStar.search(0, 0, grid.getWidth() - 1, grid.getHeight() - 1, grid, true);
 
     for (int i = 0; i < path.size(); i++) {
       long p = path.get(i);

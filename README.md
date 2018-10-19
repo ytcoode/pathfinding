@@ -8,10 +8,10 @@ ___A fast, GC-free Java implementation of A* (A Star) algorithm.___
 ## Usage
 
 ```java
-// Build a grid map of 20 * 20
+// Build a grid map of width 20 * 20
 Grid grid = new Grid(20, 20);
 
-// By default, all the points in the grid map are walkable
+// By default, all points in the grid map are walkable
 grid.setWalkable(5, 5, false);
 
 // Get a AStar object
@@ -20,8 +20,8 @@ AStar aStar = new AStar();
 
 // Search
 Path path = aStar.search(0, 0, grid.getWidth() - 1, grid.getHeight() - 1, grid);
+// Path path = aStar.search(0, 0, grid.getWidth() - 1, grid.getHeight() - 1, grid, true);
 
-// Output
 for (int i = 0; i < path.size(); i++) {
   long p = path.get(i);
   int x = Point.getX(p);
@@ -58,9 +58,29 @@ From 0-0 to 499-499 -> 11867 ops/sec
 
 ## Screenshots
 
-![Image of AStar](images/astar.png)
+smooth: false;
 
-![Image of AStar2](images/astar2.png)
+![Image of AStar](images/astar-0-unsmooth.png)
+
+smooth: true;
+
+![Image of AStar](images/astar-0-smooth.png)
+
+smooth: false;
+
+![Image of AStar](images/astar-1-unsmooth.png)
+
+smooth: true;
+
+![Image of AStar](images/astar-1-smooth.png)
+
+smooth: false;
+
+![Image of AStar](images/astar-2-unsmooth.png)
+
+smooth: true;
+
+![Image of AStar](images/astar-2-smooth.png)
 
 <!-- references -->
 

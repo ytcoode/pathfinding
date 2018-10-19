@@ -22,7 +22,7 @@ public class Benchmark {
     for (int i = 0; i < 3; i++) {
       long st = System.currentTimeMillis();
       for (int j = 0; j < n; j++) {
-        aStar.search(x1, y1, x2, y2, map, path);
+        aStar.search(x1, y1, x2, y2, map, path, false);
       }
       double dt = (System.currentTimeMillis() - st) / 1000d;
       int ops = (int) Math.round(n / dt);

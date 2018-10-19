@@ -5,8 +5,8 @@ import java.awt.*;
 
 public abstract class GridCanvas extends JFrame {
 
-  private static final int width = 800; // 90
-  private static final int height = 800; // 50
+  private static final int width = 800;
+  private static final int height = 800;
 
   private static final int startX = 60;
   private static final int startY = 80;

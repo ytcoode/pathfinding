@@ -18,9 +18,9 @@ public class VisualDemo extends GridCanvas {
     int x2 = map.getWidth() - 1;
     int y2 = map.getHeight() - 1;
 
-    setWalkable(map, x1, y1, x2, y2, true);
+    setWalkable(map, x1, y1, x2, y2, false);
 
-    Path path = new AStar().search(x1, y1, x2, y2, map, false);
+    Path path = new AStar().search(x1, y1, x2, y2, map, true);
     new VisualDemo(map, path);
   }
 
