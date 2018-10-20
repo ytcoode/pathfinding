@@ -1,9 +1,10 @@
 package io.ytcode.pathfinding.astar;
 
 class Reachable {
-  private static final float DELTA = 1f;
+  private static final double DELTA = 1.0;
 
-  static boolean isReachable(int x1, int y1, int x2, int y2, Grid map) {
+  static boolean isReachable(
+      int x1, int y1, int x2, int y2, Grid map) { // 必须使用double，而不能是float，保证int范围内的数的精度
     assert map.isWalkable(x1, y1) && map.isWalkable(x2, y2);
 
     int dx = x2 - x1;
@@ -45,118 +46,107 @@ class Reachable {
       return true;
     }
 
-    int dxAbs = Math.abs(dx);
-    int dyAbs = Math.abs(dy);
+    double cx1 = x1 + 0.5; // 起始中心点
+    double cy1 = y1 + 0.5;
 
-    float cx1 = x1 + 0.5f; // 起始中心点
-    float cy1 = y1 + 0.5f;
-
-    float cx2 = x2 + 0.5f; // 终点中心点
-    float cy2 = y2 + 0.5f;
+    double cx2 = x2 + 0.5; // 终点中心点
+    double cy2 = y2 + 0.5;
 
     // 45度角斜线
-    if (dxAbs == dyAbs) {
-      float deltaX = dx > 0 ? DELTA : -DELTA;
-      float deltaY = dy > 0 ? DELTA : -DELTA;
-
-      float cx = cx1;
-      float cy = cy1;
+    if (Math.abs(dx) == Math.abs(dy)) {
+      double deltaX = dx > 0 ? DELTA : -DELTA;
+      double deltaY = dy > 0 ? DELTA : -DELTA;
 
       do {
-        cx += deltaX;
-        cy += deltaY;
+        cx1 += deltaX;
+        cy1 += deltaY;
 
-        if (!map.isWalkable((int) cx, (int) cy)) {
+        if (!map.isWalkable((int) cx1, (int) cy1)) {
           return false;
         }
 
         if (dx > 0 && dy < 0) { // 往右下角走
-          if (!map.isWalkable((int) cx, (int) (cy - deltaY))) {
+          if (!map.isWalkable((int) cx1, (int) (cy1 - deltaY))) {
             return false;
           }
         } else if (dx < 0 && dy > 0) { // 往左上角走
-          if (!map.isWalkable((int) (cx - deltaX), (int) cy)) {
+          if (!map.isWalkable((int) (cx1 - deltaX), (int) cy1)) {
             return false;
           }
         }
-      } while (cx != cx2 && cy != cy2);
+      } while (cx1 != cx2 && cy1 != cy2);
 
       return true;
     }
 
-    float cx = cx1; // 从起始点的中心开始
-    float cy = cy1;
-
     // 偏x轴，递增x
-    if (dxAbs > dyAbs) {
-      float deltaX = dx > 0 ? DELTA : -DELTA;
-      float deltaY = (float) dy / dx * deltaX;
+    if (Math.abs(dx) > Math.abs(dy)) {
+      double deltaX = dx > 0 ? DELTA : -DELTA;
+      double deltaY = (double) dy / dx * deltaX;
 
       int lastY = y1;
 
       do {
-        cx += deltaX;
-        cy += deltaY;
+        cx1 += deltaX;
+        cy1 += deltaY;
 
-        int x = (int) cx;
-        int y = (int) cy;
+        int x = (int) cx1;
+        int y = (int) cy1;
         if (!map.isWalkable(x, y)) {
           return false;
         }
 
         // x轴每次进一格，y轴每次进小于一格
         if (y != lastY) {
-          int lineY = (int) (cy - deltaY / 2); // 边界线时的y
+          int lineY = (int) (cy1 - deltaY / 2); // 边界线时的y
           if (lastY == lineY) { // 穿越底格跨格
             if (!map.isWalkable(x, lastY)) {
               return false;
             }
           } else {
             assert y == lineY;
-            if (!map.isWalkable((int) (cx - deltaX), y)) {
+            if (!map.isWalkable((int) (cx1 - deltaX), y)) {
               return false;
             }
           }
           lastY = y;
         }
-
-      } while (cx != cx2);
+      } while (cx1 != cx2);
 
       return true;
     }
 
     // 偏y轴，递增y
-    float deltaY = dy > 0 ? DELTA : -DELTA;
-    float deltaX = (float) dx / dy * deltaY;
+    double deltaY = dy > 0 ? DELTA : -DELTA;
+    double deltaX = (double) dx / dy * deltaY;
 
     int lastX = x1;
 
     do {
-      cx += deltaX;
-      cy += deltaY;
+      cx1 += deltaX;
+      cy1 += deltaY;
 
-      int x = (int) cx;
-      int y = (int) cy;
+      int x = (int) cx1;
+      int y = (int) cy1;
       if (!map.isWalkable(x, y)) {
         return false;
       }
 
       if (x != lastX) {
-        int lineX = (int) (cx - deltaX / 2); // 边界线时的x
+        int lineX = (int) (cx1 - deltaX / 2); // 边界线时的x
         if (lastX == lineX) { // 穿越底格跨格
           if (!map.isWalkable(lastX, y)) {
             return false;
           }
         } else {
           assert x == lineX;
-          if (!map.isWalkable(x, (int) (cy - deltaY))) {
+          if (!map.isWalkable(x, (int) (cy1 - deltaY))) {
             return false;
           }
         }
         lastX = x;
       }
-
-    } while (cy != cy2);
+    } while (cy1 != cy2);
 
     return true;
   }
