@@ -12,7 +12,7 @@ import static io.ytcode.pathfinding.astar.Node.getG;
 import static io.ytcode.pathfinding.astar.Node.getX;
 import static io.ytcode.pathfinding.astar.Node.getY;
 import static io.ytcode.pathfinding.astar.Node.setGF;
-import static io.ytcode.pathfinding.astar.Reachable.isReachable;
+import static io.ytcode.pathfinding.astar.Reachability.isReachable;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -40,8 +40,7 @@ public class AStar {
     search(sx, sy, ex, ey, map, path, false);
   }
 
-  public void search(
-      int sx, int sy, int ex, int ey, Grid map, Path path, boolean smooth) { // smooth出来的路径不保证完全准确
+  public void search(int sx, int sy, int ex, int ey, Grid map, Path path, boolean smooth) {
     assert isCLean(map);
     if (!map.isWalkable(sx, sy)) {
       return;
@@ -224,20 +223,21 @@ public class AStar {
       return;
     }
 
-    while (path.size() >= 2) { // 这个点到上一个点是直达的，所以只用看上上个点
-      long p = path.get(1);
+    while (path.size() >= 2) {
+      long p = path.get(1); // 这个点到上一个点是直达的，所以只用从上上个点开始
       int x2 = Point.getX(p);
       int y2 = Point.getY(p);
 
+      // 即使到这个点不可达，但到其父节点还是有可能是可达的，这里直接结束是考虑性能和概率问题
       if (!isReachable(x, y, x2, y2, map)) {
         path.add(x, y);
         return;
       }
+
       path.remove();
     }
     path.add(x, y);
   }
-
 
   private void clear() {
     nodes.clear();

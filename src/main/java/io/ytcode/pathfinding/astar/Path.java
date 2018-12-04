@@ -35,6 +35,10 @@ public class Path {
     return size;
   }
 
+  public boolean isEmpty() {
+    return size < 2; // 至少两点才能构成一段路径
+  }
+
   public void clear() {
     size = 0;
   }

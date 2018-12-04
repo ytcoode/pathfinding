@@ -24,5 +24,17 @@ public class Demo {
       int y = Point.getY(p);
       System.out.println(x + "-" + y);
     }
+
+    // Other utilities
+
+    // isReachable
+    boolean b = Reachability.isReachable(0, 0, 6, 6, grid);
+    System.out.println(b);
+
+    // getClosestWalkablePointToTarget
+    long p = Reachability.getClosestWalkablePointToTarget(0, 0, 6, 6, grid);
+    int x = Point.getX(p);
+    int y = Point.getY(p);
+    System.out.println(x + "-" + y);
   }
 }

@@ -20,7 +20,7 @@ AStar aStar = new AStar();
 
 // Search
 Path path = aStar.search(0, 0, grid.getWidth() - 1, grid.getHeight() - 1, grid);
-// Path path = aStar.search(0, 0, grid.getWidth() - 1, grid.getHeight() - 1, grid, true);
+//    Path path = aStar.search(0, 0, grid.getWidth() - 1, grid.getHeight() - 1, grid, true);
 
 for (int i = 0; i < path.size(); i++) {
   long p = path.get(i);
@@ -28,6 +28,18 @@ for (int i = 0; i < path.size(); i++) {
   int y = Point.getY(p);
   System.out.println(x + "-" + y);
 }
+
+// Other utilities
+
+// isReachable
+boolean b = Reachability.isReachable(0, 0, 6, 6, grid);
+System.out.println(b);
+
+// getClosestWalkablePointToTarget
+long p = Reachability.getClosestWalkablePointToTarget(0, 0, 6, 6, grid);
+int x = Point.getX(p);
+int y = Point.getY(p);
+System.out.println(x + "-" + y);
 ```
 
 ## Benchmark

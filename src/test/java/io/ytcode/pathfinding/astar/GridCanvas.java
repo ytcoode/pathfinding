@@ -19,7 +19,7 @@ public abstract class GridCanvas extends JFrame {
 
   GridCanvas(String name) {
     super(name);
-    setSize(width, height);
+    setSize(endX, endY);
     setVisible(true);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }

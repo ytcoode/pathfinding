@@ -14,11 +14,11 @@ public class VisualDemo extends GridCanvas {
     Grid map = new Grid(gridWidth, gridHeight);
 
     int x1 = 0;
-    int y1 = 0;
+    int y1 = map.getHeight() - 1;
     int x2 = map.getWidth() - 1;
-    int y2 = map.getHeight() - 1;
+    int y2 = 0;
 
-    setWalkable(map, x1, y1, x2, y2, false);
+    setWalkable(map, x1, y1, x2, y2, true);
 
     Path path = new AStar().search(x1, y1, x2, y2, map, true);
     new VisualDemo(map, path);
@@ -36,7 +36,7 @@ public class VisualDemo extends GridCanvas {
     }
 
     Random r = new Random();
-    int n = map.getWidth() * map.getHeight() / 5;
+    int n = map.getWidth() * map.getHeight() / 4;
 
     for (int i = 0; i < n; i++) {
       int x = r.nextInt(map.getWidth());
@@ -103,14 +103,32 @@ public class VisualDemo extends GridCanvas {
       }
       lastP = p;
     }
+
+    //    drawLine(g, toPoint(0, 15), toPoint(3, 14), Color.BLUE);
+
+    //    for (int i = 0; i < map.getHeight(); i++) {
+    //      int x = 15;
+    //      int y = i;
+    //      drawLine(g, toPoint(0, 15), toPoint(x, y), Color.BLUE);
+    //    }
+    //
+    //    for (int i = 0; i < map.getWidth(); i++) {
+    //      int x = i;
+    //      int y = 0;
+    //      drawLine(g, toPoint(0, 15), toPoint(x, y), Color.GRAY);
+    //    }
   }
 
   private void drawLine(Graphics g, long p1, long p2) {
+    drawLine(g, p1, p2, Color.GRAY);
+  }
+
+  private void drawLine(Graphics g, long p1, long p2, Color color) {
     int x1 = Point.getX(p1);
     int y1 = Point.getY(p1);
     int x2 = Point.getX(p2);
     int y2 = Point.getY(p2);
-    drawLine(g, x1, y1, x2, y2, Color.GRAY);
+    drawLine(g, x1, y1, x2, y2, color);
   }
 
   @Override
