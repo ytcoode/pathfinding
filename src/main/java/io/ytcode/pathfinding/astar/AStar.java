@@ -1,8 +1,5 @@
 package io.ytcode.pathfinding.astar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static io.ytcode.pathfinding.astar.Cost.COST_DIAGONAL;
 import static io.ytcode.pathfinding.astar.Cost.COST_ORTHOGONAL;
 import static io.ytcode.pathfinding.astar.Cost.hCost;
@@ -18,7 +15,6 @@ import static java.lang.Math.min;
 
 /** http://homepages.abdn.ac.uk/f.guerin/pages/teaching/CS1013/practicals/aStarTutorial.htm */
 public class AStar {
-  private static final Logger logger = LoggerFactory.getLogger(AStar.class);
 
   private final Nodes nodes;
 
@@ -94,8 +90,8 @@ public class AStar {
         open(x1, y2, pg + COST_DIAGONAL, DIRECTION_RIGHT_DOWN, ex, ey, map);
       }
     } catch (Exception e) {
-      logger.error("AStar.search: from {}-{} to {}-{}", sx, sy, ex, ey, e);
       path.clear();
+      throw e;
     } finally {
       clear();
       assert isCLean(map);
