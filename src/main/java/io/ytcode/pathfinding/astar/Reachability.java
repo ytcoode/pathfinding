@@ -25,9 +25,6 @@ public class Reachability {
     double cx1 = scaleDown(x1 + 0.5, scale);
     double cy1 = scaleDown(y1 + 0.5, scale);
 
-    double cx2 = scaleDown(x2 + 0.5, scale);
-    double cy2 = scaleDown(y2 + 0.5, scale);
-
     int gx1 = (int) cx1;
     int gy1 = (int) cy1;
 
@@ -36,8 +33,11 @@ public class Reachability {
       return toPoint(x1, y1);
     }
 
-    int gx2 = (int) cx2;
-    int gy2 = (int) cy2;
+    final double cx2 = scaleDown(x2 + 0.5, scale);
+    final double cy2 = scaleDown(y2 + 0.5, scale);
+
+    final int gx2 = (int) cx2;
+    final int gy2 = (int) cy2;
 
     // 在同一格
     if (gx1 == gx2 && gy1 == gy2) {
@@ -79,27 +79,39 @@ public class Reachability {
     // 斜线的情况
     // y=k*x+b, k=dy/dx, b=y-k*x
 
-    double dx = cx2 - cx1;
-    double dy = cy2 - cy1;
+    final double dx = cx2 - cx1;
+    final double dy = cy2 - cy1;
 
-    double k = dy / dx;
-    double b = cy1 - k * cx1;
+    final double k = dy / dx;
+    final double b = cy1 - k * cx1;
 
-    double deltaX, deltaY;
+    final boolean addX;
+    final double addDx, addDy;
+
     if (Math.abs(dx) > Math.abs(dy)) { // 偏x轴，递增x
-      deltaX = dx > 0 ? 1 : -1;
-      deltaY = deltaX * k;
+      addX = true;
+      addDx = dx > 0 ? 1 : -1;
+      addDy = addDx * k;
     } else { // 偏y轴，递增y
-      deltaY = dy > 0 ? 1 : -1;
-      deltaX = deltaY / k;
+      addX = false;
+      addDy = dy > 0 ? 1 : -1;
+      addDx = addDy / k;
     }
 
-    while (true) {
-      cx1 += deltaX;
-      cy1 += deltaY;
+    double cx = cx1;
+    double cy = cy1;
 
-      int gx = (int) cx1;
-      int gy = (int) cy1;
+    while (true) {
+      cx += addDx;
+      cy += addDy;
+
+      int gx = (int) cx;
+      int gy = (int) cy;
+
+      if ((addX && gx == gx2) || gy == gy2) { // 最后一个点要保证精确相等
+          gx = gx2;
+          gy = gy2;
+      }
 
       if (!grid.isWalkable(gx, gy)) {
         break;
@@ -130,12 +142,15 @@ public class Reachability {
         return toPoint(x2, y2);
       }
 
+      cx1 = cx;
+      cy1 = cy;
+
       gx1 = gx;
       gy1 = gy;
     }
 
     // 因不可行走导致中断，倒退回上一个检查点并返回
-    return scaleUpPoint(cx1 - deltaX, cy1 - deltaY, scale);
+    return scaleUpPoint(cx1, cy1, scale);
   }
 
   private static double scaleDown(double d, int scale) {

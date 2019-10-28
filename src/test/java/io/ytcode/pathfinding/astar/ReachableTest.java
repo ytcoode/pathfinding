@@ -4,6 +4,9 @@ import org.junit.jupiter.api.Test;
 
 import static io.ytcode.pathfinding.astar.GridCanvas.gridHeight;
 import static io.ytcode.pathfinding.astar.GridCanvas.gridWidth;
+import static io.ytcode.pathfinding.astar.Point.getX;
+import static io.ytcode.pathfinding.astar.Point.getY;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ReachableTest {
 
@@ -30,10 +33,10 @@ public class ReachableTest {
     long p;
 
     p = Reachability.getClosestWalkablePointToTarget(0, 0, 2, 2, grid);
-    System.out.println(Point.getX(p) + "-" + Point.getY(p));
+    System.out.println(getX(p) + "-" + Point.getY(p));
 
     p = Reachability.getClosestWalkablePointToTarget(0, 0, 3, 3, grid);
-    System.out.println(Point.getX(p) + "-" + Point.getY(p));
+    System.out.println(getX(p) + "-" + Point.getY(p));
   }
 
   @Test
@@ -44,12 +47,24 @@ public class ReachableTest {
     long p;
 
     p = Reachability.getClosestWalkablePointToTarget(8, 8, 29, 21, 10, grid);
-    System.out.println(Point.getX(p) + "-" + Point.getY(p));
+    System.out.println(getX(p) + "-" + Point.getY(p));
 
     p = Reachability.getClosestWalkablePointToTarget(8, 8, 50, 50, 10, grid);
-    System.out.println(Point.getX(p) + "-" + Point.getY(p));
+    System.out.println(getX(p) + "-" + Point.getY(p));
 
     p = Reachability.getClosestWalkablePointToTarget(0, 4, 5, 4, 2, grid);
-    System.out.println(Point.getX(p) + "-" + Point.getY(p));
+    System.out.println(getX(p) + "-" + Point.getY(p));
+  }
+
+  @Test
+  void getClosestWalkablePointToTarget3() {
+    Grid grid = new Grid(10000, 10000);
+    long p = Reachability.getClosestWalkablePointToTarget(4102, 7274, 4058, 7251, 50, grid);
+    assertEquals(getX(p), 4058);
+    assertEquals(getY(p), 7251);
+
+    p = Reachability.getClosestWalkablePointToTarget(0, 0, 4058, 7251, 50, grid);
+    assertEquals(getX(p), 4058);
+    assertEquals(getY(p), 7251);
   }
 }
