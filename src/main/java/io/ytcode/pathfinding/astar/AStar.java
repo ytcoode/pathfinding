@@ -4,11 +4,7 @@ import static io.ytcode.pathfinding.astar.Cost.COST_DIAGONAL;
 import static io.ytcode.pathfinding.astar.Cost.COST_ORTHOGONAL;
 import static io.ytcode.pathfinding.astar.Cost.hCost;
 import static io.ytcode.pathfinding.astar.Grid.*;
-import static io.ytcode.pathfinding.astar.Node.getF;
-import static io.ytcode.pathfinding.astar.Node.getG;
-import static io.ytcode.pathfinding.astar.Node.getX;
-import static io.ytcode.pathfinding.astar.Node.getY;
-import static io.ytcode.pathfinding.astar.Node.setGF;
+import static io.ytcode.pathfinding.astar.Node.*;
 import static io.ytcode.pathfinding.astar.Reachability.isReachable;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -38,6 +34,8 @@ public class AStar {
 
   public void search(int sx, int sy, int ex, int ey, Grid map, Path path, boolean smooth) {
     assert isCLean(map);
+    path.clear();
+
     if (!map.isWalkable(sx, sy)) {
       return;
     }
@@ -49,8 +47,6 @@ public class AStar {
     if (sx == ex && sy == ey) {
       return;
     }
-
-    path.clear();
 
     int endX = map.getWidth() - 1;
     int endY = map.getHeight() - 1;
