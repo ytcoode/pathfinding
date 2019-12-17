@@ -108,10 +108,15 @@ public class Reachability {
       int gx = (int) cx;
       int gy = (int) cy;
 
-      if ((addX && gx == gx2) || gy == gy2) { // 最后一个点要保证精确相等
-          gx = gx2;
-          gy = gy2;
+      if (addX ? (addDx > 0 ? gx >= gx2 : gx <= gx2) : (addDy > 0 ? gy >= gy2 : gy <= gy2)) {
+        gx = gx2;
+        gy = gy2;
       }
+
+      //      if ((addX && gx == gx2) || gy == gy2) { // 最后一个点要保证精确相等
+      //        gx = gx2;
+      //        gy = gy2;
+      //      }
 
       if (!grid.isWalkable(gx, gy)) {
         break;

@@ -67,4 +67,12 @@ public class ReachableTest {
     assertEquals(getX(p), 4058);
     assertEquals(getY(p), 7251);
   }
+
+  @Test
+  void getClosestWalkablePointToTarget4() {
+    Grid grid = new Grid(10000, 10000);
+    long p = Reachability.getClosestWalkablePointToTarget(1681, 1751, 1701, 1773, 50, grid);
+    assertEquals(getX(p), 1701);
+    assertEquals(getY(p), 1773);
+  }
 }
