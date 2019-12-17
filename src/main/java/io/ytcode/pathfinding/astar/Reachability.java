@@ -85,15 +85,15 @@ public class Reachability {
     final double k = dy / dx;
     final double b = cy1 - k * cx1;
 
-    final boolean addX;
+    final boolean stepX;
     final double addDx, addDy;
 
     if (Math.abs(dx) > Math.abs(dy)) { // 偏x轴，递增x
-      addX = true;
+      stepX = true;
       addDx = dx > 0 ? 1 : -1;
       addDy = addDx * k;
     } else { // 偏y轴，递增y
-      addX = false;
+      stepX = false;
       addDy = dy > 0 ? 1 : -1;
       addDx = addDy / k;
     }
@@ -108,15 +108,12 @@ public class Reachability {
       int gx = (int) cx;
       int gy = (int) cy;
 
-      if (addX ? (addDx > 0 ? gx >= gx2 : gx <= gx2) : (addDy > 0 ? gy >= gy2 : gy <= gy2)) {
+      if (stepX
+          ? (addDx > 0 ? gx >= gx2 : gx <= gx2)
+          : (addDy > 0 ? gy >= gy2 : gy <= gy2)) { // 最后一个点要保证精确相等
         gx = gx2;
         gy = gy2;
       }
-
-      //      if ((addX && gx == gx2) || gy == gy2) { // 最后一个点要保证精确相等
-      //        gx = gx2;
-      //        gy = gy2;
-      //      }
 
       if (!grid.isWalkable(gx, gy)) {
         break;
@@ -168,10 +165,6 @@ public class Reachability {
 
   private static int scaleUp(double d, int scale) {
     return (int) (d * scale);
-  }
-
-  private static long scaleUpPoint(int x, int y, int scale) {
-    return toPoint(scaleUp(x, scale), scaleUp(y, scale));
   }
 
   private static long scaleUpPoint(double x, double y, int scale) {
