@@ -18,8 +18,17 @@ public class Reachability {
 
   public static long getClosestWalkablePointToTarget(
       int x1, int y1, int x2, int y2, int scale, Grid grid) {
+    return getClosestWalkablePointToTarget(x1, y1, x2, y2, scale, grid, null);
+  }
+
+  public static long getClosestWalkablePointToTarget(
+      int x1, int y1, int x2, int y2, int scale, Grid grid, Fence fence) {
     if (scale < 1) {
       throw new IllegalArgumentException("Illegal scale: " + scale);
+    }
+
+    if (fence != null && fence.isReachable(x1, y1, x2, y2)) {
+      fence = null; // 后面都不用判断了
     }
 
     double cx1 = scaleDown(x1 + 0.5, scale);
@@ -41,6 +50,9 @@ public class Reachability {
 
     // 在同一格
     if (gx1 == gx2 && gy1 == gy2) {
+      if (fence != null && !fence.isReachable(x1, y1, x2, y2)) {
+        return toPoint(x1, y1);
+      }
       return toPoint(x2, y2);
     }
 
@@ -48,7 +60,9 @@ public class Reachability {
     if (y1 == y2) { // 绝对水平
       int inc = gx2 > gx1 ? 1 : -1;
       for (int gx = gx1 + inc; ; gx += inc) {
-        if (!grid.isWalkable(gx, gy1)) {
+        if (!grid.isWalkable(gx, gy1)
+            || (fence != null
+                && !fence.isReachable(x1, y1, gx == gx2 ? x2 : scaleUp(gx, scale), y2))) {
           if (gx - inc == gx1) { // 第二格就不可走了，返回起始点
             return toPoint(x1, y1);
           }
@@ -64,7 +78,9 @@ public class Reachability {
     if (x1 == x2) { // 绝对竖直
       int inc = gy2 > gy1 ? 1 : -1;
       for (int gy = gy1 + inc; ; gy += inc) {
-        if (!grid.isWalkable(gx1, gy)) {
+        if (!grid.isWalkable(gx1, gy)
+            || (fence != null
+                && !fence.isReachable(x1, y1, x2, gy == gy2 ? y2 : scaleUp(gy, scale)))) {
           if (gy - inc == gy1) {
             return toPoint(x1, y1);
           }
@@ -141,7 +157,14 @@ public class Reachability {
       }
 
       if (gx == gx2 && gy == gy2) {
+        if (fence != null && !fence.isReachable(x1, y1, x2, y2)) {
+          break;
+        }
         return toPoint(x2, y2);
+      }
+
+      if (fence != null && !fence.isReachable(x1, y1, scaleUp(cx, scale), scaleUp(cy, scale))) {
+        break;
       }
 
       cx1 = cx;
